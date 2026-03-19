@@ -62,7 +62,7 @@ export default function LoginForm() {
               onChange={handleChange}
               required
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-gray-900"
-              placeholder="john@example.com"
+              placeholder="yourmail@gmail.com"
             />
           </div>
         </div>
