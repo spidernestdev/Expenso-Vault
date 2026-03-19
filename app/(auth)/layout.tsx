@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           {/* Logo/Brand */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Expense Tracker
+              Expenso Vault
             </h1>
             <p className="text-gray-600 mt-2">Manage your finances smartly</p>
           </div>
