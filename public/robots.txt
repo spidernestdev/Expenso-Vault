@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+Allow: /login
+Allow: /register
+Disallow: /dashboard
+Disallow: /transactions
+Disallow: /categories
+Disallow: /profile
+Disallow: /settings
 
 Sitemap: https://expenso-vault.vercel.app/sitemap.xml
