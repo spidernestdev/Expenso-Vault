@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   description: "Track your expenses, manage budget, and control your money easily with Expenso.",
   keywords: ["expense tracker", "budget manager", "money tracker", "finance app"],
   manifest: "/manifest.json",
+  verification: {
+    google: "gwMrDsLQxw-r10QVREieh_UJ9wHbKqfQjmiz5Yn9UNo",
+  },
 };
 
 export default function RootLayout({
