@@ -1,14 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Wallet, TrendingUp, TrendingDown, Plus } from "lucide-react";
 import { transactionAPI } from "@/app/lib/api";
-import { useCurrency } from "@/app/hooks/useCurrency"; // ✅ added
+import { useCurrency } from "@/app/hooks/useCurrency";
 import BalanceCard from "@/app/components/dashboard/BalanceCard";
 import RecentTransactions from "@/app/components/dashboard/RecentTransactions";
-import MonthlyChart from "@/app/components/dashboard/MonthlyChart";
-import CategoryPie from "@/app/components/dashboard/CategoryPie";
 import Link from "next/link";
+
+// 🔥 Lazy load heavy charts
+const MonthlyChart = dynamic(() => import("@/app/components/dashboard/MonthlyChart"), { ssr: false });
+const CategoryPie = dynamic(() => import("@/app/components/dashboard/CategoryPie"), { ssr: false });
 
 interface Transaction {
   _id: string;
@@ -24,48 +27,20 @@ interface Transaction {
   date: string;
 }
 
-interface Stats {
-  balance: number;
-  income: number;
-  expense: number;
-  transactionCount: number;
-}
-
 export default function DashboardPage() {
-  const [stats, setStats] = useState<Stats>({
-    balance: 0,
-    income: 0,
-    expense: 0,
-    transactionCount: 0
-  });
-
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
-  const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([]);
 
-  const { currency, loading: currencyLoading } = useCurrency(); // ✅ added
+  const { currency, loading: currencyLoading } = useCurrency();
 
+  // 🔥 Fetch data
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await transactionAPI.getAll();
-        const transactions = response.data.data.data;
+        const response = await transactionAPI.getAll({ limit: 50 });
+        const data = response.data.data.data;
 
-        setRecentTransactions(transactions.slice(0, 5));
-
-        const income = transactions
-          .filter((t: Transaction) => t.type === "income")
-          .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
-
-        const expense = transactions
-          .filter((t: Transaction) => t.type === "expense")
-          .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
-
-        setStats({
-          balance: income - expense,
-          income,
-          expense,
-          transactionCount: transactions.length
-        });
+        setTransactions(data);
       } catch (error) {
         console.error("Failed to fetch dashboard data", error);
       } finally {
@@ -76,46 +51,61 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, []);
 
+  // 😏 Delete handler (no refetch = fast)
   const handleDeleteTransaction = async (id: string) => {
     if (!confirm("Are you sure you want to delete this transaction?")) return;
 
     try {
       await transactionAPI.delete(id);
-      const response = await transactionAPI.getAll({ limit: 5 });
-      const transactions = response.data.data.data;
 
-      setRecentTransactions(transactions);
-
-      const income = transactions
-        .filter((t: Transaction) => t.type === "income")
-        .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
-
-      const expense = transactions
-        .filter((t: Transaction) => t.type === "expense")
-        .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
-
-      setStats({
-        balance: income - expense,
-        income,
-        expense,
-        transactionCount: transactions.length
-      });
+      // 💣 Update UI instantly
+      setTransactions(prev => prev.filter(t => t._id !== id));
     } catch (error) {
       console.error("Failed to delete transaction", error);
     }
   };
 
-  // ✅ FIX: wait for BOTH data + currency
+  // 🔥 Memoized stats
+  const stats = useMemo(() => {
+    const income = transactions
+      .filter(t => t.type === "income")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const expense = transactions
+      .filter(t => t.type === "expense")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return {
+      balance: income - expense,
+      income,
+      expense,
+      transactionCount: transactions.length
+    };
+  }, [transactions]);
+
+  // 😏 Memoized recent
+  const recentTransactions = useMemo(
+    () => transactions.slice(0, 5),
+    [transactions]
+  );
+
+  // 💖 Loading skeleton (better LCP)
   if (loading || currencyLoading || !currency) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-pulse text-gray-500">Loading...</div>
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 bg-gray-200 rounded w-40" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="h-24 bg-gray-200 rounded" />
+          <div className="h-24 bg-gray-200 rounded" />
+          <div className="h-24 bg-gray-200 rounded" />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
 
@@ -128,17 +118,20 @@ export default function DashboardPage() {
         </Link>
       </div>
 
+      {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <BalanceCard title="Balance" amount={stats.balance} icon={Wallet} color="indigo" />
         <BalanceCard title="Income" amount={stats.income} icon={TrendingUp} color="green" />
         <BalanceCard title="Expense" amount={stats.expense} icon={TrendingDown} color="red" />
       </div>
 
+      {/* Charts (lazy loaded) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <MonthlyChart />
         <CategoryPie />
       </div>
 
+      {/* Recent Transactions */}
       <RecentTransactions
         transactions={recentTransactions}
         onDelete={handleDeleteTransaction}
