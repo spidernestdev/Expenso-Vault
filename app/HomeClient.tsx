@@ -15,7 +15,6 @@ import {
   Wallet, 
   BarChart3,
   Sparkles,
-  Star,
   Target,
   Shield
 } from "lucide-react";
@@ -239,6 +238,83 @@ export default function HomeClient() {
                 <p className="text-gray-500">{benefit.desc}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+            {/* Currency Support Section */}
+      <section className="py-10 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-linear-to-r from-emerald-100 to-teal-100 px-4 py-2 rounded-full mb-4">
+              <Wallet className="w-4 h-4 text-emerald-600" />
+              <span className="text-sm font-medium text-emerald-700">Global Support</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold bg-linear-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              All Currencies Supported
+            </h2>
+            <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
+              Track your finances in any currency. Expenso supports all major world currencies.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {[
+              { code: "USD", name: "US Dollar", symbol: "$", flag: "🇺🇸" },
+              { code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺" },
+              { code: "GBP", name: "British Pound", symbol: "£", flag: "🇬🇧" },
+              { code: "JPY", name: "Japanese Yen", symbol: "¥", flag: "🇯🇵" },
+              { code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳" },
+              { code: "CNY", name: "Chinese Yuan", symbol: "¥", flag: "🇨🇳" },
+              { code: "CAD", name: "Canadian Dollar", symbol: "C$", flag: "🇨🇦" },
+              { code: "AUD", name: "Australian Dollar", symbol: "A$", flag: "🇦🇺" },
+              { code: "CHF", name: "Swiss Franc", symbol: "Fr", flag: "🇨🇭" },
+              { code: "HKD", name: "Hong Kong Dollar", symbol: "HK$", flag: "🇭🇰" },
+              { code: "SGD", name: "Singapore Dollar", symbol: "S$", flag: "🇸🇬" },
+              { code: "SEK", name: "Swedish Krona", symbol: "kr", flag: "🇸🇪" },
+              { code: "KRW", name: "South Korean Won", symbol: "₩", flag: "🇰🇷" },
+              { code: "NOK", name: "Norwegian Krone", symbol: "kr", flag: "🇳🇴" },
+              { code: "NZD", name: "New Zealand Dollar", symbol: "NZ$", flag: "🇳🇿" },
+              { code: "MXN", name: "Mexican Peso", symbol: "$", flag: "🇲🇽" },
+              { code: "BRL", name: "Brazilian Real", symbol: "R$", flag: "🇧🇷" },
+              { code: "ZAR", name: "South African Rand", symbol: "R", flag: "🇿🇦" },
+              { code: "RUB", name: "Russian Ruble", symbol: "₽", flag: "🇷🇺" },
+              { code: "TRY", name: "Turkish Lira", symbol: "₺", flag: "🇹🇷" },
+              { code: "SAR", name: "Saudi Riyal", symbol: "﷼", flag: "🇸🇦" },
+              { code: "AED", name: "UAE Dirham", symbol: "د.إ", flag: "🇦🇪" },
+              { code: "ARS", name: "Argentine Peso", symbol: "$", flag: "🇦🇷" },
+              { code: "CLP", name: "Chilean Peso", symbol: "$", flag: "🇨🇱" },
+              { code: "COP", name: "Colombian Peso", symbol: "$", flag: "🇨🇴" },
+              { code: "EGP", name: "Egyptian Pound", symbol: "£", flag: "🇪🇬" },
+              { code: "IDR", name: "Indonesian Rupiah", symbol: "Rp", flag: "🇮🇩" },
+              { code: "ILS", name: "Israeli Shekel", symbol: "₪", flag: "🇮🇱" },
+              { code: "MYR", name: "Malaysian Ringgit", symbol: "RM", flag: "🇲🇾" },
+              { code: "NGN", name: "Nigerian Naira", symbol: "₦", flag: "🇳🇬" },
+              { code: "PKR", name: "Pakistani Rupee", symbol: "₨", flag: "🇵🇰" },
+              { code: "PHP", name: "Philippine Peso", symbol: "₱", flag: "🇵🇭" },
+              { code: "PLN", name: "Polish Złoty", symbol: "zł", flag: "🇵🇱" },
+              { code: "THB", name: "Thai Baht", symbol: "฿", flag: "🇹🇭" },
+              { code: "VND", name: "Vietnamese Đồng", symbol: "₫", flag: "🇻🇳" },
+            ].map((currency, i) => (
+              <motion.div
+                key={currency.code}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.02 }}
+                className="group bg-white border border-gray-200 rounded-xl p-3 text-center hover:shadow-lg hover:border-indigo-200 transition-all hover:-translate-y-1"
+              >
+                <div className="text-2xl mb-1">{currency.flag}</div>
+                <div className="font-bold text-gray-900 text-sm">{currency.code}</div>
+                <div className="text-xs text-gray-500 truncate">{currency.name}</div>
+                <div className="text-indigo-600 text-xs font-medium mt-1">{currency.symbol}</div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <p className="text-sm text-gray-500">
+              + 30+ more currencies supported • Auto-conversion • Real-time rates
+            </p>
           </div>
         </div>
       </section>
