@@ -5,7 +5,7 @@ import { useCurrency } from "@/app/hooks/useCurrency";
 import { TrendingUp, Calendar } from "lucide-react";
 
 interface DailyTotal {
-  _id: string; // "YYYY-MM-DD"
+  _id: string;
   income: number;
   expense: number;
   count: number;
@@ -15,10 +15,11 @@ interface Props {
   dailyTotals: DailyTotal[];
 }
 
+const BAR_HEIGHT = 144; // h-36 in px
+
 export default function MonthlyBarChart({ dailyTotals }: Props) {
   const { format } = useCurrency();
 
-  // Group daily totals into monthly buckets
   const chartData = useMemo(() => {
     const monthlyMap: Record<string, { month: string; year: number; income: number; expense: number; date: number }> = {};
 
@@ -37,7 +38,7 @@ export default function MonthlyBarChart({ dailyTotals }: Props) {
 
     return Object.values(monthlyMap)
       .sort((a, b) => a.date - b.date)
-      .slice(-6); // last 6 months
+      .slice(-6);
   }, [dailyTotals]);
 
   const maxValue = Math.max(1, ...chartData.flatMap((d) => [d.income, d.expense]));
@@ -56,7 +57,7 @@ export default function MonthlyBarChart({ dailyTotals }: Props) {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow h-80">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <div className="p-2 bg-indigo-50 rounded-lg">
             <TrendingUp className="w-5 h-5 text-indigo-600" />
@@ -68,51 +69,61 @@ export default function MonthlyBarChart({ dailyTotals }: Props) {
         </div>
       </div>
 
-      <div className="relative">
-        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-          {[0, 25, 50, 75, 100].map((val) => (
-            <div key={val} className="border-t border-gray-100 w-full h-0" />
-          ))}
-        </div>
+      {/* Chart area */}
+      <div className="relative" style={{ height: BAR_HEIGHT }}>
+        {/* Grid lines */}
+        {[0, 25, 50, 75, 100].map((pct) => (
+          <div key={pct} className="absolute w-full border-t border-gray-100" style={{ bottom: `${pct}%` }} />
+        ))}
 
-        <div className="h-40 flex items-end justify-between gap-2 relative z-10">
+        {/* Bars */}
+        <div className="absolute inset-0 flex items-end justify-around gap-2 px-2">
           {chartData.map((d, i) => {
-            const incomeHeight = (d.income / maxValue) * 100;
-            const expenseHeight = (d.expense / maxValue) * 100;
+            const incomeH = Math.max((d.income / maxValue) * BAR_HEIGHT, d.income > 0 ? 4 : 0);
+            const expenseH = Math.max((d.expense / maxValue) * BAR_HEIGHT, d.expense > 0 ? 4 : 0);
 
             return (
-              <div key={i} className="flex flex-col items-center flex-1 group">
-                <div className="flex items-end gap-1 w-full h-36 mb-2">
-                  <div className="relative w-1/2 group/bar">
-                    <div
-                      className="bg-linear-to-t from-green-500 to-green-400 rounded-t-lg transition-all duration-300 group-hover/bar:shadow-lg group-hover/bar:shadow-green-200"
-                      style={{ height: `${Math.max(incomeHeight, 4)}%` }}
-                    >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
-                        {format(d.income)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="relative w-1/2 group/bar">
-                    <div
-                      className="bg-linear-to-t from-red-500 to-red-400 rounded-t-lg transition-all duration-300 group-hover/bar:shadow-lg group-hover/bar:shadow-red-200"
-                      style={{ height: `${Math.max(expenseHeight, 4)}%` }}
-                    >
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover/bar:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
-                        {format(d.expense)}
-                      </div>
+              <div key={i} className="flex items-end gap-1 flex-1" style={{ height: BAR_HEIGHT }}>
+                {/* Income bar */}
+                <div className="relative flex-1 group flex items-end h-full">
+                  <div
+                    className="w-full bg-linear-to-t from-green-500 to-green-400 rounded-t-lg transition-all duration-500 group-hover:opacity-80"
+                    style={{ height: `${incomeH}px` }}
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
+                      {format(d.income)}
                     </div>
                   </div>
                 </div>
-                <span className="text-xs font-medium text-gray-600 group-hover:text-indigo-600 transition-colors">{d.month}</span>
-                <span className="text-[10px] text-gray-400">{d.year}</span>
+                {/* Expense bar */}
+                <div className="relative flex-1 group flex items-end h-full">
+                  <div
+                    className="w-full bg-linear-to-t from-red-500 to-red-400 rounded-t-lg transition-all duration-500 group-hover:opacity-80"
+                    style={{ height: `${expenseH}px` }}
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
+                      {format(d.expense)}
+                    </div>
+                  </div>
+                </div>
               </div>
             );
           })}
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-100">
+      {/* X-axis labels */}
+      <div className="flex justify-around px-2 mt-2">
+        {chartData.map((d, i) => (
+          <div key={i} className="flex flex-col items-center flex-1">
+            <span className="text-xs font-medium text-gray-600">{d.month}</span>
+            <span className="text-[10px] text-gray-400">{d.year}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Legend */}
+      <div className="flex items-center justify-center gap-6 mt-3 pt-3 border-t border-gray-100">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-green-500 rounded-full" />
           <span className="text-xs font-medium text-gray-600">Income</span>

@@ -65,6 +65,8 @@ export default function DashboardPage() {
 
         setTransactions(txRes.data.data.data || []);
         setStats(statsRes.data.data);
+console.log("dailyTotals", statsRes.data.data?.dailyTotals);
+        
       } catch (error) {
         console.error("Failed to fetch dashboard data", error);
       } finally {
