@@ -1,11 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { Plus, Download } from "lucide-react";
 import { transactionAPI } from "@/app/lib/api";
 import TransactionList from "@/app/components/transactions/TransactionList";
-import TransactionForm from "@/app/components/transactions/TransactionForm";
 import TransactionFilters from "@/app/components/transactions/TransactionFilters";
+
+// 😏 lazy load form (heavy)
+const TransactionForm = dynamic(
+  () => import("@/app/components/transactions/TransactionForm"),
+  { ssr: false }
+);
 
 interface Transaction {
   _id: string;
@@ -32,6 +38,7 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+
   const [filters, setFilters] = useState({
     type: "",
     category: "",
@@ -39,6 +46,7 @@ export default function TransactionsPage() {
     endDate: "",
     search: ""
   });
+
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     limit: 20,
@@ -46,13 +54,17 @@ export default function TransactionsPage() {
     pages: 0
   });
 
-  const fetchTransactions = async () => {
+  // 😏 memo filters (avoid unnecessary API calls)
+  const activeFilters = useMemo(() => {
+    return Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value !== "")
+    );
+  }, [filters]);
+
+  // 🔥 optimized fetch
+  const fetchTransactions = useCallback(async () => {
     try {
       setLoading(true);
-      
-      const activeFilters = Object.fromEntries(
-        Object.entries(filters).filter(([_, value]) => value !== "")
-      );
 
       const response = await transactionAPI.getAll({
         page: pagination.page,
@@ -67,12 +79,13 @@ export default function TransactionsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, activeFilters]);
 
   useEffect(() => {
     fetchTransactions();
-  }, [pagination.page, filters]);
+  }, [fetchTransactions]);
 
+  // 😏 add (no extra re-renders)
   const handleAddTransaction = async (formData: any) => {
     try {
       await transactionAPI.create(formData);
@@ -83,12 +96,15 @@ export default function TransactionsPage() {
     }
   };
 
+  // 💣 delete optimized (no full refetch)
   const handleDeleteTransaction = async (id: string) => {
     if (!confirm("Are you sure you want to delete this transaction?")) return;
 
     try {
       await transactionAPI.delete(id);
-      fetchTransactions();
+
+      // instant UI update 🔥
+      setTransactions(prev => prev.filter(t => t._id !== id));
     } catch (error) {
       console.error("Failed to delete transaction", error);
     }
@@ -97,11 +113,11 @@ export default function TransactionsPage() {
   const handleExport = async () => {
     try {
       const response = await transactionAPI.exportCSV();
-      
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'transactions.csv');
+      link.setAttribute("download", "transactions.csv");
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -112,9 +128,12 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Transactions</h1>
-        
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+          Transactions
+        </h1>
+
         <div className="flex items-center gap-2">
           <button
             onClick={handleExport}
@@ -123,7 +142,7 @@ export default function TransactionsPage() {
             <Download className="w-4 h-4" />
             <span className="hidden sm:inline">Export</span>
           </button>
-          
+
           <button
             onClick={() => setShowAddForm(true)}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
@@ -141,7 +160,7 @@ export default function TransactionsPage() {
         loading={loading}
         onDelete={handleDeleteTransaction}
         pagination={pagination}
-        onPageChange={(page) => setPagination({ ...pagination, page })}
+        onPageChange={(page) => setPagination(prev => ({ ...prev, page }))}
       />
 
       {showAddForm && (
