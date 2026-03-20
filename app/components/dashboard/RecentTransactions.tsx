@@ -50,6 +50,7 @@ export default function RecentTransactions({ transactions, onDelete }: RecentTra
               key={transaction._id} 
               transaction={transaction}
               onDelete={onDelete}
+              onUpdate={() => {}}
             />
           ))}
         </div>
