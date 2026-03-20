@@ -320,39 +320,123 @@ export default function HomeClient() {
       </section>
 
       {/* Screenshots Section */}
-      <section className="py-10 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">See it in action</h2>
-          <p className="text-gray-600 text-center mb-12">Simple, beautiful, and powerful interface</p>
+      <section className="py-20 px-4 bg-linear-to-b from-white to-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-linear-to-r from-indigo-100 to-purple-100 px-5 py-2.5 rounded-full mb-5 shadow-sm">
+              <LayoutDashboard className="w-4 h-4 text-indigo-600" />
+              <span className="text-sm font-medium text-indigo-700">Live Preview</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-5 bg-linear-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+              See it in action
+            </h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              Simple, beautiful, and powerful interface designed for you
+            </p>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {screenshots.map((img, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-gray-100 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all group"
-              >
-                <div className="aspect-video bg-linear-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => {
-                      e.currentTarget.src = "https://placehold.co/600x400/e2e8f0/64748b?text=" + img.title;
-                    }}
-                  />
-                </div>
-                <div className="p-4 text-center">
-                  <p className="font-medium">{img.title}</p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+            {/* Dashboard */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+            >
+              <div className="relative overflow-hidden bg-linear-to-br from-indigo-50 to-purple-50" style={{ aspectRatio: '720 / 399' }}>
+                <img
+                  src="/home-images/dashboard.webp"
+                  alt="Dashboard preview"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="p-5 text-center">
+                <h3 className="font-bold text-gray-900 text-lg mb-1">Dashboard</h3>
+                <p className="text-sm text-gray-500">Overview & analytics</p>
+              </div>
+            </motion.div>
+
+            {/* Transactions */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+            >
+              <div className="relative overflow-hidden bg-linear-to-br from-emerald-50 to-teal-50" style={{ aspectRatio: '720 / 399' }}>
+                <img
+                  src="/home-images/transactions.webp"
+                  alt="Transactions preview"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="p-5 text-center">
+                <h3 className="font-bold text-gray-900 text-lg mb-1">Transactions</h3>
+                <p className="text-sm text-gray-500">Track income & expenses</p>
+              </div>
+            </motion.div>
+
+            {/* Categories */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+            >
+              <div className="relative overflow-hidden bg-linear-to-br from-purple-50 to-pink-50" style={{ aspectRatio: '720 / 399' }}>
+                <img
+                  src="/home-images/categories.webp"
+                  alt="Categories preview"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="p-5 text-center">
+                <h3 className="font-bold text-gray-900 text-lg mb-1">Categories</h3>
+                <p className="text-sm text-gray-500">Organize spending</p>
+              </div>
+            </motion.div>
+
+            {/* Profile */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              viewport={{ once: true }}
+              className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+            >
+              <div className="relative overflow-hidden bg-linear-to-br from-orange-50 to-amber-50" style={{ aspectRatio: '720 / 399' }}>
+                <img
+                  src="/home-images/profile.webp"
+                  alt="Profile preview"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+              <div className="p-5 text-center">
+                <h3 className="font-bold text-gray-900 text-lg mb-1">Profile</h3>
+                <p className="text-sm text-gray-500">Personal settings</p>
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="text-center mt-12">
+            <div className="inline-flex items-center gap-2 bg-gray-100/80 backdrop-blur-sm px-5 py-2 rounded-full">
+              <Smartphone className="w-4 h-4 text-indigo-500" />
+              <span className="text-sm text-gray-600">Available on all devices • Web & Mobile</span>
+            </div>
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-20 px-4 bg-linear-to-r from-indigo-600 to-indigo-700">
         <div className="max-w-4xl mx-auto text-center">
