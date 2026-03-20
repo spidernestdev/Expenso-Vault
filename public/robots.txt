@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://expenso-vault.vercel.app/sitemap.xml

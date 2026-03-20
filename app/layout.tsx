@@ -8,9 +8,10 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Expenso - Expense Tracker & Budget Manager",
+  title: "Expenso - Free Expense Tracker & Budget Manager",
   description: "Track your expenses, manage budget, and control your money easily with Expenso.",
-  manifest: "/manifest.json", // 💣 important
+  keywords: ["expense tracker", "budget manager", "money tracker", "finance app"],
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
