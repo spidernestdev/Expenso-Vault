@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Plus, Download } from "lucide-react";
 import { transactionAPI } from "@/app/lib/api";
 import TransactionList from "@/app/components/transactions/TransactionList";
@@ -12,12 +12,7 @@ interface Transaction {
   amount: number;
   type: "income" | "expense";
   description: string;
-  category: {
-    _id: string;
-    name: string;
-    icon: string;
-    color: string;
-  };
+  category: { _id: string; name: string; icon: string; color: string };
   date: string;
 }
 
@@ -32,34 +27,20 @@ export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [filters, setFilters] = useState({
-    type: "",
-    category: "",
-    startDate: "",
-    endDate: "",
-    search: ""
-  });
-  const [pagination, setPagination] = useState<Pagination>({
-    page: 1,
-    limit: 20,
-    total: 0,
-    pages: 0
-  });
+  const [filters, setFilters] = useState({ type: "", category: "", startDate: "", endDate: "", search: "" });
+  const [pagination, setPagination] = useState<Pagination>({ page: 1, limit: 5, total: 0, pages: 0 });
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     try {
       setLoading(true);
-      
       const activeFilters = Object.fromEntries(
-        Object.entries(filters).filter(([_, value]) => value !== "")
+        Object.entries(filters).filter(([_, v]) => v !== "")
       );
-
       const response = await transactionAPI.getAll({
         page: pagination.page,
         limit: pagination.limit,
         ...activeFilters
       });
-
       setTransactions(response.data.data.data);
       setPagination(response.data.data.pagination);
     } catch (error) {
@@ -67,11 +48,11 @@ export default function TransactionsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, filters]);
 
   useEffect(() => {
     fetchTransactions();
-  }, [pagination.page, filters]);
+  }, [fetchTransactions]);
 
   const handleAddTransaction = async (formData: any) => {
     try {
@@ -85,7 +66,6 @@ export default function TransactionsPage() {
 
   const handleDeleteTransaction = async (id: string) => {
     if (!confirm("Are you sure you want to delete this transaction?")) return;
-
     try {
       await transactionAPI.delete(id);
       fetchTransactions();
@@ -97,11 +77,10 @@ export default function TransactionsPage() {
   const handleExport = async () => {
     try {
       const response = await transactionAPI.exportCSV();
-      
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'transactions.csv');
+      link.setAttribute("download", "transactions.csv");
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -114,7 +93,6 @@ export default function TransactionsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Transactions</h1>
-        
         <div className="flex items-center gap-2">
           <button
             onClick={handleExport}
@@ -123,7 +101,6 @@ export default function TransactionsPage() {
             <Download className="w-4 h-4" />
             <span className="hidden sm:inline">Export</span>
           </button>
-          
           <button
             onClick={() => setShowAddForm(true)}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
@@ -140,8 +117,9 @@ export default function TransactionsPage() {
         transactions={transactions}
         loading={loading}
         onDelete={handleDeleteTransaction}
+        onUpdate={fetchTransactions}
         pagination={pagination}
-        onPageChange={(page) => setPagination({ ...pagination, page })}
+        onPageChange={(page) => setPagination(prev => ({ ...prev, page }))}
       />
 
       {showAddForm && (
