@@ -51,6 +51,7 @@ export default function RecentTransactions({ transactions, onDelete }: RecentTra
               transaction={transaction}
               onDelete={onDelete}
               onUpdate={() => {}}
+              categories={[]}
             />
           ))}
         </div>
