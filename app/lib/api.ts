@@ -85,4 +85,13 @@ export const reviewAPI = {
   deleteReply: (id: string, replyId: string) => api.delete(`/reviews/${id}/replies/${replyId}`),
 };
 
+export const notificationAPI = {
+  getAll: (params?: any) => api.get("/notifications", { params }),
+  getUnreadCount: () => api.get("/notifications/unread-count"),
+  markRead: (id: string) => api.put(`/notifications/${id}/read`),
+  markAllRead: () => api.put("/notifications/mark-all-read"),
+  delete: (id: string) => api.delete(`/notifications/${id}`),
+  deleteAll: () => api.delete("/notifications/all"),
+};
+
 export default api;

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, User, LogOut, Settings, Wallet, ChevronDown } from "lucide-react";
+import { User, LogOut, Settings, Wallet, ChevronDown } from "lucide-react";
 import { useCurrency } from "@/app/context/CurrencyContext";
+import NotificationDropdown from "@/app/components/layout/NotificationDropdown";
 
 export default function Header() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -26,12 +27,7 @@ export default function Header() {
           {/* Right Actions */}
           <div className="flex items-center gap-1">
             {/* Notifications */}
-            <button className="p-2.5 rounded-xl hover:bg-gray-100 transition-all relative group">
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-[8px] text-white font-bold">3</span>
-              </div>
-              <Bell className="w-5 h-5 text-gray-600 group-hover:text-indigo-600 transition-colors" />
-            </button>
+            <NotificationDropdown />
 
             {/* Profile */}
             <div className="relative">
@@ -59,9 +55,7 @@ export default function Header() {
               {showProfileMenu && (
                 <>
                   <div className="fixed inset-0 bg-black/20 backdrop-blur-sm lg:hidden" onClick={() => setShowProfileMenu(false)} />
-
                   <div className="absolute right-0 mt-2 w-72 lg:w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50">
-                    {/* User Info Header */}
                     <div className="px-4 py-4 bg-linear-to-r from-indigo-600 to-purple-600 mb-2">
                       <p className="text-sm font-medium text-white">{user?.name || "User"}</p>
                       <p className="text-xs text-indigo-100">{user?.email || "user@example.com"}</p>
@@ -70,19 +64,15 @@ export default function Header() {
                         <span className="text-[8px] bg-white/20 text-white px-2 py-0.5 rounded-full">{user?.language?.toUpperCase() || "EN"}</span>
                       </div>
                     </div>
-
                     <Link href="/profile" className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 transition-all" onClick={() => setShowProfileMenu(false)}>
                       <div className="p-1.5 bg-indigo-50 rounded-lg"><User className="w-4 h-4 text-indigo-600" /></div>
                       <span className="flex-1">Profile</span>
                     </Link>
-
                     <Link href="/profile" className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all" onClick={() => setShowProfileMenu(false)}>
                       <div className="p-1.5 bg-gray-50 rounded-lg"><Settings className="w-4 h-4 text-gray-600" /></div>
                       <span className="flex-1">Settings</span>
                     </Link>
-
                     <div className="my-2 border-t border-gray-100" />
-
                     <button
                       onClick={() => { localStorage.removeItem("token"); window.location.href = "/login"; }}
                       className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all"
