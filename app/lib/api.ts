@@ -71,4 +71,18 @@ export const categoryAPI = {
   getSpending: (params?: any) => api.get("/categories/analytics/spending", { params }),
 };
 
+export const reviewAPI = {
+  getAll: (params?: any) => api.get("/reviews", { params }),
+  create: (data: any) => api.post("/reviews", data),
+  update: (id: string, data: any) => api.put(`/reviews/${id}`, data),
+  toggleLike: (id: string) => api.post(`/reviews/${id}/like`),
+  toggleDislike: (id: string) => api.post(`/reviews/${id}/dislike`),
+  delete: (id: string) => api.delete(`/reviews/${id}`),
+  getReplies: (id: string, params?: any) => api.get(`/reviews/${id}/replies`, { params }),
+  addReply: (id: string, text: string) => api.post(`/reviews/${id}/replies`, { text }),
+  toggleReplyLike: (id: string, replyId: string) => api.post(`/reviews/${id}/replies/${replyId}/like`),
+  toggleReplyDislike: (id: string, replyId: string) => api.post(`/reviews/${id}/replies/${replyId}/dislike`),
+  deleteReply: (id: string, replyId: string) => api.delete(`/reviews/${id}/replies/${replyId}`),
+};
+
 export default api;

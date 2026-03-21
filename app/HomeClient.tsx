@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ReviewSection from "./components/reviews/ReviewSection";
 import {
   ArrowRight, CheckCircle, TrendingUp, LayoutDashboard, PieChart,
   Download, PlusCircle, Eye, Smartphone, Wallet, BarChart3,
@@ -201,7 +202,7 @@ export default function HomeClient() {
       </section>
 
       {/* ── SCREENSHOTS ── */}
-      <section className="py-20 px-4 bg-linear-to-b from-white to-gray-50">
+      <section className="py-5 px-4 bg-linear-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-linear-to-r from-indigo-100 to-purple-100 px-5 py-2.5 rounded-full mb-5 shadow-sm">
@@ -237,6 +238,8 @@ export default function HomeClient() {
           </div>
         </div>
       </section>
+
+      <ReviewSection />
 
       {/* ── CTA ── */}
       <section className="py-20 px-4 bg-linear-to-r from-indigo-600 to-indigo-700">

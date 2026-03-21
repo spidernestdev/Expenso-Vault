@@ -12,29 +12,23 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [authLoading, setAuthLoading] = useState(true);
   const [currency, setCurrency] = useState("INR");
-  const [currencyLoading, setCurrencyLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
+    if (!token) { router.push("/login"); return; }
 
-    // Single profile call — auth check + currency in one shot
     authAPI.getProfile()
       .then((res) => {
-        const userCurrency = res?.data?.data?.currency;
-        if (userCurrency) setCurrency(userCurrency);
+        const data = res?.data?.data;
+        if (data?.currency) setCurrency(data.currency);
+        setUser(data);
       })
       .catch(() => {
         localStorage.removeItem("token");
         router.push("/login");
       })
-      .finally(() => {
-        setAuthLoading(false);
-        setCurrencyLoading(false);
-      });
+      .finally(() => setAuthLoading(false));
   }, [router]);
 
   if (authLoading) {
@@ -46,7 +40,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <CurrencyProvider initialCurrency={currency} loading={currencyLoading}>
+    <CurrencyProvider initialCurrency={currency} initialUser={user} loading={false}>
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
         <div className="lg:ml-64 min-h-screen flex flex-col">

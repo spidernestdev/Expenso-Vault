@@ -90,7 +90,7 @@ export default function Sidebar() {
 
         {/* Version Info */}
         <div className="mt-4 px-4">
-          <p className="text-[10px] text-gray-400">v2.0.0 • Premium</p>
+          <p className="text-[10px] text-gray-400">v1.0.0 • Expenso</p>
         </div>
       </div>
     </aside>
