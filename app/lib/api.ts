@@ -43,6 +43,8 @@ export const authAPI = {
   updateProfile: (data: any) => api.put("/auth/profile", data),
   changePassword: (data: any) => api.post("/auth/change-password", data),
   logout: () => api.post("/auth/logout"),
+  sendOTP: (data: { email: string; name?: string }) => api.post("/auth/send-otp", data),
+  verifyOTP: (data: { email: string; otp: string }) => api.post("/auth/verify-otp", data),
 };
 
 // Transaction APIs
