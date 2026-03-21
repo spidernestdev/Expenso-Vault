@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface TransactionListProps {
   transactions: any[];
+  categories: any[];
   loading: boolean;
   onDelete: (id: string) => void;
   onUpdate: () => void; // ← added
@@ -17,6 +18,7 @@ interface TransactionListProps {
 
 export default function TransactionList({
   transactions,
+  categories,
   loading,
   onDelete,
   onUpdate,
@@ -60,6 +62,7 @@ export default function TransactionList({
             transaction={transaction}
             onDelete={onDelete}
             onUpdate={onUpdate}
+            categories={categories} 
           />
         ))}
       </div>

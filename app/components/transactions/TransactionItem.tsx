@@ -14,10 +14,11 @@ interface TransactionItemProps {
     date: string;
   };
   onDelete: (id: string) => void;
-  onUpdate: () => void; // ← refetch callback instead of reload
+  onUpdate: () => void;
+  categories: any[];
 }
 
-export default function TransactionItem({ transaction, onDelete, onUpdate }: TransactionItemProps) {
+export default function TransactionItem({ transaction, onDelete, onUpdate, categories }: TransactionItemProps) {
   const [showEdit, setShowEdit] = useState(false);
   const { format } = useCurrency();
   const isIncome = transaction.type === "income";
@@ -35,7 +36,7 @@ export default function TransactionItem({ transaction, onDelete, onUpdate }: Tra
     try {
       await transactionAPI.update(transaction._id, data);
       setShowEdit(false);
-      onUpdate(); // ← refetch, no full reload
+      onUpdate();
     } catch (error) {
       console.error("Failed to update transaction", error);
     }
@@ -45,20 +46,14 @@ export default function TransactionItem({ transaction, onDelete, onUpdate }: Tra
     <>
       <div className="flex items-center justify-between py-3 px-2 hover:bg-gray-50 rounded-xl group">
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div
-            className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-            style={{ backgroundColor: `${transaction.category.color}20` }}
-          >
-            {isIncome ? (
-              <ArrowUpRight className="w-5 h-5" style={{ color: transaction.category.color }} />
-            ) : (
-              <ArrowDownRight className="w-5 h-5" style={{ color: transaction.category.color }} />
-            )}
+          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${transaction.category.color}20` }}>
+            {isIncome
+              ? <ArrowUpRight className="w-5 h-5" style={{ color: transaction.category.color }} />
+              : <ArrowDownRight className="w-5 h-5" style={{ color: transaction.category.color }} />
+            }
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-sm font-medium text-gray-900 truncate">
-              {transaction.description || "No description"}
-            </span>
+            <span className="text-sm font-medium text-gray-900 truncate">{transaction.description || "No description"}</span>
             <span className="text-xs text-gray-500 truncate">{transaction.category.name}</span>
           </div>
         </div>
@@ -71,16 +66,10 @@ export default function TransactionItem({ transaction, onDelete, onUpdate }: Tra
             <p className="text-xs text-gray-500">{formattedDate}</p>
           </div>
           <div className="flex items-center gap-1">
-            <button
-              onClick={() => setShowEdit(true)}
-              className="p-1.5 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors"
-            >
+            <button onClick={() => setShowEdit(true)} className="p-1.5 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors">
               <Edit className="w-4 h-4" />
             </button>
-            <button
-              onClick={handleDelete}
-              className="p-1.5 hover:bg-red-50 rounded-lg text-gray-600 hover:text-red-600 transition-colors"
-            >
+            <button onClick={handleDelete} className="p-1.5 hover:bg-red-50 rounded-lg text-gray-600 hover:text-red-600 transition-colors">
               <Trash2 className="w-4 h-4" />
             </button>
           </div>
@@ -92,6 +81,7 @@ export default function TransactionItem({ transaction, onDelete, onUpdate }: Tra
           transaction={transaction}
           onSubmit={handleEdit}
           onClose={() => setShowEdit(false)}
+          categories={categories}
         />
       )}
     </>

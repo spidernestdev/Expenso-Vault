@@ -132,6 +132,7 @@ export default function TransactionsPage() {
         onUpdate={fetchTransactions}
         pagination={pagination}
         onPageChange={(page) => setPagination(prev => ({ ...prev, page }))}
+        categories={categories}
       />
 
       {/* Add Transaction Form */}
