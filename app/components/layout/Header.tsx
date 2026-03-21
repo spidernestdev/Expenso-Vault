@@ -14,22 +14,29 @@ export default function Header() {
     <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-30">
       <div className="px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex items-center justify-between">
-          {/* Brand */}
-          <Link href="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="p-2 bg-linear-to-br from-indigo-600 to-indigo-700 rounded-xl shadow-lg shadow-indigo-200 group-hover:shadow-xl transition-all group-hover:scale-105">
-              <Wallet className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-base font-bold bg-linear-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
-              Expenso Vault
-            </span>
-          </Link>
+{/* Brand */}
+<Link href="/dashboard" className="flex items-center gap-2.5 group">
+  <div className="p-2 bg-linear-to-br from-indigo-600 to-indigo-700 rounded-xl shadow-lg shadow-indigo-200 group-hover:shadow-xl transition-all group-hover:scale-105">
+    <Wallet className="w-5 h-5 text-white" />
+  </div>
+  <div className="flex flex-col">
+    <span className="text-base font-bold bg-linear-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent leading-tight">
+      Expenso Vault
+    </span>
+    <div className="lg:hidden flex items-center gap-1">
+      <span className="relative flex h-1.5 w-1.5">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
+      </span>
+      <span className="text-[9px] font-semibold text-green-600">v1.0.0</span>
+    </div>
+  </div>
+</Link>
 
           {/* Right Actions */}
           <div className="flex items-center gap-1">
-            {/* Notifications */}
             <NotificationDropdown />
 
-            {/* Profile */}
             <div className="relative">
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
