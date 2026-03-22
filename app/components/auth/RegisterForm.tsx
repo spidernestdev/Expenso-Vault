@@ -117,10 +117,27 @@ export default function RegisterForm() {
           </div>
         </div>
 
-        <button type="submit" disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2 disabled:opacity-50">
-          {loading ? "Creating account..." : <><LogIn className="w-5 h-5" />Register</>}
-        </button>
+<button
+  type="submit"
+  disabled={loading}
+  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg hover:shadow-indigo-200"
+>
+  {loading ? (
+    <div className="flex items-center gap-1.5">
+      Creating account
+      <span className="flex gap-1">
+        <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+        <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+        <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+      </span>
+    </div>
+  ) : (
+    <>
+      <LogIn className="w-5 h-5" />
+      Register
+    </>
+  )}
+</button>
       </form>
 
       <p className="mt-4 text-center text-sm text-gray-600">

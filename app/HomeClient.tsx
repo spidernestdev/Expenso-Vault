@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import ReviewSection from "./components/reviews/ReviewSection";
 import HomeHeader from "./components/layout/HomeHeader";
 import HomeMobileNav from "./components/layout/HomeMobileNav";
@@ -71,6 +72,40 @@ const currencies = [
   { code: "VND", name: "Vietnamese Đồng", symbol: "₫", flag: "🇻🇳" },
 ];
 
+function WordReveal({ text }: { text: string }) {
+  const words = text.split(" ");
+  return (
+    <span>
+      <style>{`
+        @keyframes wordReveal {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .word-reveal {
+          display: inline-block;
+          opacity: 0;
+          animation: wordReveal 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+          background: linear-gradient(to right, #4f46e5, #9333ea);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          padding-bottom: 4px;
+          line-height: 1.2;
+        }
+      `}</style>
+      {words.map((word, i) => (
+        <span
+          key={i}
+          className="word-reveal"
+          style={{ animationDelay: `${i * 0.1}s` }}
+        >
+          {word}&nbsp;
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export default function HomeClient() {
   return (
     <div className="bg-white text-gray-900 overflow-hidden">
@@ -93,8 +128,8 @@ export default function HomeClient() {
               Best free expense tracker
             </div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 pb-2 bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Free Expense Tracker & Budget Manager
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 pb-4">
+              <WordReveal text="Free Expense Tracker & Budget Manager" />
             </h1>
 
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
@@ -120,7 +155,7 @@ export default function HomeClient() {
         </section>
 
         {/* ── FEATURES ── */}
-        <section id="features" className="py-10 px-4 bg-gray-50">
+        <section id="features" className="py-10 px-4 bg-gray-50 scroll-mt-20">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything you need to manage money</h2>
@@ -141,7 +176,7 @@ export default function HomeClient() {
         </section>
 
         {/* ── HOW IT WORKS ── */}
-        <section id="how-it-works" className="py-10 px-4">
+        <section id="how-it-works" className="py-10 px-4 scroll-mt-20">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">How it works</h2>
@@ -163,7 +198,7 @@ export default function HomeClient() {
         </section>
 
         {/* ── BENEFITS ── */}
-        <section className="py-10 px-4 bg-linear-to-br from-indigo-50 to-purple-50">
+        <section id="benefits" className="py-10 px-4 bg-linear-to-br from-indigo-50 to-purple-50 scroll-mt-20">
           <div className="max-w-6xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-12">Why choose Expenso?</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -181,7 +216,7 @@ export default function HomeClient() {
         </section>
 
         {/* ── CURRENCY ── */}
-        <section className="py-10 px-4 bg-white">
+        <section id="currencies" className="py-10 px-4 bg-white scroll-mt-20">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
               <div className="inline-flex items-center gap-2 bg-linear-to-r from-emerald-100 to-teal-100 px-4 py-2 rounded-full mb-4">
@@ -208,7 +243,7 @@ export default function HomeClient() {
         </section>
 
         {/* ── SCREENSHOTS ── */}
-        <section className="py-5 px-4 bg-linear-to-b from-white to-gray-50">
+        <section id="screenshots" className="py-5 px-4 bg-linear-to-b from-white to-gray-50 scroll-mt-20">
           <div className="max-w-7xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
               <div className="inline-flex items-center gap-2 bg-linear-to-r from-indigo-100 to-purple-100 px-5 py-2.5 rounded-full mb-5 shadow-sm">
@@ -246,7 +281,7 @@ export default function HomeClient() {
         </section>
 
         {/* ── REVIEWS ── */}
-        <section id="reviews">
+        <section id="reviews" className="scroll-mt-20">
           <ReviewSection />
         </section>
 
