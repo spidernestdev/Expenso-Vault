@@ -18,13 +18,19 @@ interface Category {
   type: string;
 }
 
+// Fix timezone issue — get local date not UTC date
+const getLocalDateString = () => {
+  const today = new Date();
+  return new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split("T")[0];
+};
+
 export default function TransactionForm({ transaction, onSubmit, onClose, categories }: TransactionFormProps) {
   const [formData, setFormData] = useState({
     amount: transaction?.amount || "",
     type: transaction?.type || "expense",
     category: transaction?.category?._id || "",
     description: transaction?.description || "",
-    date: transaction?.date ? new Date(transaction.date).toISOString().split("T")[0] : new Date().toISOString().split("T")[0]
+    date: transaction?.date ? new Date(transaction.date).toISOString().split("T")[0] : getLocalDateString()
   });
   const [loading, setLoading] = useState(false);
 
@@ -43,12 +49,10 @@ export default function TransactionForm({ transaction, onSubmit, onClose, catego
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return; // prevent double submit
     setLoading(true);
-    try {
-      onSubmit({ ...formData, amount: parseFloat(formData.amount) });
-    } finally {
-      setLoading(false);
-    }
+    onSubmit({ ...formData, amount: parseFloat(formData.amount) });
+    // loading stays true — parent closes form, no flicker
   };
 
   return (
@@ -123,11 +127,12 @@ export default function TransactionForm({ transaction, onSubmit, onClose, catego
                 placeholder="Enter description" />
             </div>
 
-            {/* Date */}
+            {/* Date — no max, future dates allowed */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
               <input type="date" name="date" value={formData.date} onChange={handleChange} required
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 text-base" />
+  max={getLocalDateString()}
+  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 text-base" />
             </div>
 
           </form>
