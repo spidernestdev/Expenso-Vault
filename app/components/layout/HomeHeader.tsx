@@ -5,12 +5,13 @@ import Link from "next/link";
 import { Wallet } from "lucide-react";
 
 const navItems = [
-  { label: "Features", id: "features" },
-  { label: "How it works", id: "how-it-works" },
-  { label: "Benefits", id: "benefits" },
-  { label: "Currencies", id: "currencies" },
-  { label: "Screenshots", id: "screenshots" },
-  { label: "Reviews", id: "reviews" },
+  { label: "Features", id: "features", href: null },
+  { label: "How it works", id: "how-it-works", href: null },
+  { label: "Benefits", id: "benefits", href: null },
+  { label: "Currencies", id: "currencies", href: null },
+  { label: "Screenshots", id: "screenshots", href: null },
+  { label: "Reviews", id: "reviews", href: null },
+  { label: "Changelog", id: null, href: "/changelog" },
 ];
 
 export default function HomeHeader() {
@@ -31,13 +32,9 @@ export default function HomeHeader() {
     if (animating) return;
     setAnimating(true);
     if (menuOpen) {
-      // closing — animate out then hide
       menuRef.current?.classList.remove("animate-menu-in");
       menuRef.current?.classList.add("animate-menu-out");
-      setTimeout(() => {
-        setMenuOpen(false);
-        setAnimating(false);
-      }, 200);
+      setTimeout(() => { setMenuOpen(false); setAnimating(false); }, 200);
     } else {
       setMenuOpen(true);
       setTimeout(() => {
@@ -51,8 +48,18 @@ export default function HomeHeader() {
   const scrollTo = (id: string) => {
     toggleMenu();
     setTimeout(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      const el = document.getElementById(id);
+      if (el) {
+        const offset = 80;
+        const top = el.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
     }, 250);
+  };
+
+  const handleNavClick = (item: typeof navItems[0]) => {
+    if (item.href) return; // Link handles it
+    if (item.id) scrollTo(item.id);
   };
 
   return (
@@ -122,11 +129,17 @@ export default function HomeHeader() {
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-5 text-sm font-medium text-gray-600">
-              {navItems.map((item) => (
-                <button key={item.id} onClick={() => { document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" }); }} className="hover:text-indigo-600 transition-colors whitespace-nowrap">
-                  {item.label}
-                </button>
-              ))}
+              {navItems.map((item) =>
+                item.href ? (
+                  <Link key={item.label} href={item.href} className="hover:text-indigo-600 transition-colors whitespace-nowrap">
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button key={item.id} onClick={() => item.id && scrollTo(item.id)} className="hover:text-indigo-600 transition-colors whitespace-nowrap">
+                    {item.label}
+                  </button>
+                )
+              )}
             </nav>
 
             {/* Desktop CTA */}
@@ -162,15 +175,26 @@ export default function HomeHeader() {
           {/* Mobile dropdown */}
           {menuOpen && (
             <div ref={menuRef} className="lg:hidden animate-menu-in bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-gray-100 mt-2 p-4 space-y-1">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollTo(item.id)}
-                  className="w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors"
-                >
-                  {item.label}
-                </button>
-              ))}
+              {navItems.map((item) =>
+                item.href ? (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={toggleMenu}
+                    className="block w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={item.id}
+                    onClick={() => item.id && scrollTo(item.id)}
+                    className="w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors"
+                  >
+                    {item.label}
+                  </button>
+                )
+              )}
               <div className="pt-2 border-t border-gray-100 space-y-2">
                 {isLoggedIn ? (
                   <Link href="/dashboard" className="block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-xl text-sm font-semibold transition-colors">

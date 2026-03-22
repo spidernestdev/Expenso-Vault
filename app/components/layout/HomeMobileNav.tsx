@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Home, Sparkles, Star, LayoutDashboard, LogIn } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Home, Sparkles, Star, LayoutDashboard, LogIn, FileText } from "lucide-react";
 
 export default function HomeMobileNav() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const router = useRouter();
 
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("token"));
@@ -39,19 +40,20 @@ export default function HomeMobileNav() {
   };
 
   const navItems = [
-    { id: "hero", label: "Home", icon: Home, action: () => scrollTo("hero") },
-    { id: "features", label: "Features", icon: Sparkles, action: () => scrollTo("features") },
-    { id: "reviews", label: "Reviews", icon: Star, action: () => scrollTo("reviews") },
+    { id: "hero",      label: "Home",      icon: Home,          action: () => scrollTo("hero") },
+    { id: "features",  label: "Features",  icon: Sparkles,      action: () => scrollTo("features") },
+    { id: "reviews",   label: "Reviews",   icon: Star,          action: () => scrollTo("reviews") },
+    { id: "changelog", label: "Changelog", icon: FileText,      action: () => router.push("/changelog") },
     isLoggedIn
       ? { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, action: () => { window.location.href = "/dashboard"; } }
-      : { id: "login", label: "Login", icon: LogIn, action: () => { window.location.href = "/login"; } },
+      : { id: "login",     label: "Login",     icon: LogIn,           action: () => { window.location.href = "/login"; } },
   ];
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-200 shadow-2xl z-50">
       <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-indigo-600 rounded-full shadow-lg shadow-indigo-300" />
 
-      <div className="flex justify-around items-center h-16 px-2">
+      <div className="flex justify-around items-center h-16 px-1">
         {navItems.map((item) => {
           const isActive = activeSection === item.id;
           const Icon = item.icon;

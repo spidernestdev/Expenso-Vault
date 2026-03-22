@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, List, Tags, User, Star, Home } from "lucide-react";
+import { LayoutDashboard, List, Tags, User, Home } from "lucide-react";
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -10,21 +10,6 @@ export default function MobileNav() {
 
   const handleHomeClick = () => {
     router.push("/");
-  };
-
-  const handleReviewClick = async () => {
-    if (pathname === "/") {
-      const el = document.getElementById("reviews");
-      if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
-    }
-    await router.push("/");
-    let attempts = 0;
-    const tryScroll = () => {
-      const el = document.getElementById("reviews");
-      if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); }
-      else if (attempts < 20) { attempts++; setTimeout(tryScroll, 100); }
-    };
-    setTimeout(tryScroll, 300);
   };
 
   const menuItems = [
@@ -85,17 +70,6 @@ export default function MobileNav() {
             </Link>
           );
         })}
-
-        {/* Review */}
-        <button
-          onClick={handleReviewClick}
-          className="relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 group"
-        >
-          <div className="relative p-1.5 rounded-xl transition-all duration-200 text-gray-500 group-hover:text-indigo-600 group-hover:-translate-y-0.5">
-            <Star className="w-5 h-5" />
-          </div>
-          <span className="text-[10px] font-medium mt-1 text-gray-500 group-hover:text-indigo-600 transition-colors">Review</span>
-        </button>
 
       </div>
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, List, Tags, Settings, LogOut,
-  Wallet, ChevronRight, Star, Home
+  Wallet, ChevronRight, Star, Home, FileText
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -38,6 +38,7 @@ export default function Sidebar() {
   };
 
   const isHome = pathname === "/";
+  const isChangelog = pathname === "/changelog";
 
   return (
     <aside className="hidden lg:block fixed left-0 top-0 w-64 h-screen bg-linear-to-b from-white to-gray-50/50 border-r border-gray-200 shadow-sm">
@@ -104,6 +105,22 @@ export default function Sidebar() {
             <Star className="w-5 h-5 text-gray-500" />
             <span className="text-sm font-medium">Write a Review</span>
           </button>
+
+          {/* Changelog */}
+          <Link
+            href="/changelog"
+            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${
+              isChangelog
+                ? "bg-linear-to-r from-indigo-50 to-indigo-100/50 text-indigo-700 shadow-sm"
+                : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <FileText className={`w-5 h-5 ${isChangelog ? "text-indigo-600" : "text-gray-500"}`} />
+              <span className={`text-sm font-medium ${isChangelog ? "text-indigo-700" : ""}`}>Changelog</span>
+            </div>
+            {isChangelog && <ChevronRight className="w-4 h-4 text-indigo-600" />}
+          </Link>
 
         </div>
       </nav>
