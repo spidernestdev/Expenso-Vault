@@ -16,13 +16,13 @@ export interface Version {
 export const changelog: Version[] = [
   {
     version: "1.0.0",
-    date: "March 22, 2026",
+    date: "March 19, 2026",
     badge: "major",
     summary: "Initial public release of Expenso Vault — your free, secure, and smart expense tracker.",
     changes: [
       // New Features
       { type: "new", text: "Dashboard with real-time income, expense, and balance overview" },
-      { type: "new", text: "Transaction management — add, edit, and delete transactions" },
+      { type: "new", text: "Transaction management - add, edit, and delete transactions" },
       { type: "new", text: "Category system with custom icons, colors, and budget limits" },
       { type: "new", text: "Budget alert notifications at 80% and 100% threshold" },
       { type: "new", text: "User reviews and replies system with like/dislike" },
@@ -30,17 +30,18 @@ export const changelog: Version[] = [
       { type: "new", text: "Monthly and yearly budget tracking per category" },
       { type: "new", text: "Recent transactions on dashboard with pagination" },
       { type: "new", text: "Category pie chart and monthly trend chart on dashboard" },
-      { type: "new", text: "Transaction filters — by type, category, date range, and search" },
-      { type: "new", text: "Profile settings — name, currency, language preferences" },
-      { type: "new", text: "Responsive design — works on mobile, tablet, and desktop" },
-      { type: "new", text: "PWA support — installable on mobile devices" },
+      { type: "new", text: "Transaction filters - by type, category, date range, and search" },
+      { type: "new", text: "Profile settings - name, currency, language preferences" },
+      { type: "new", text: "Responsive design - works on mobile, tablet, and desktop" },
+      { type: "new", text: "PWA support - installable app on any devices" },
       { type: "new", text: "Home page with features, how it works, benefits, and currency sections" },
 
       // Performance
+      { type: "performance", text: "Currently server is running on free server , somtimes it can take little longer than expected to login-register" },
       { type: "performance", text: "Redis caching for dashboard stats, transactions, and notifications" },
       { type: "performance", text: "Single MongoDB aggregation pipeline for all dashboard data" },
-      { type: "performance", text: "Lazy loaded charts — only render when visible on screen" },
-      { type: "performance", text: "Debounced search — no API call on every keystroke" },
+      { type: "performance", text: "Lazy loaded charts - only render when visible on screen" },
+      { type: "performance", text: "Debounced search - no API call on every keystroke" },
       { type: "performance", text: "Categories fetched once per page — no duplicate API calls" },
       { type: "performance", text: "Optimized images with WebP format and lazy loading" },
 
