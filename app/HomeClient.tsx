@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import Footer from "./components/layout/Footer";
 import ReviewSection from "./components/reviews/ReviewSection";
 import HomeHeader from "./components/layout/HomeHeader";
 import HomeMobileNav from "./components/layout/HomeMobileNav";
@@ -72,6 +72,42 @@ const currencies = [
   { code: "VND", name: "Vietnamese Đồng", symbol: "₫", flag: "🇻🇳" },
 ];
 
+// FAQ data for SEO
+const faqs = [
+  {
+    question: "Is Expenso free to use?",
+    answer: "Yes, Expenso is completely free to use. There are no hidden charges, no premium plans, and no credit card required. You get access to all features for free forever.",
+  },
+  {
+    question: "What is an expense tracker?",
+    answer: "An expense tracker is a tool that helps you record, categorize, and analyze your income and expenses. Expenso makes it easy to track daily spending, manage your budget, and gain insights into your financial habits.",
+  },
+  {
+    question: "How do I track my expenses with Expenso?",
+    answer: "Simply sign up for free, add your income and expense transactions, categorize them, and view your spending insights on the dashboard. Expenso makes personal finance management simple and intuitive.",
+  },
+  {
+    question: "Can I use Expenso on my phone?",
+    answer: "Yes! Expenso is fully mobile-friendly and works on all devices including smartphones, tablets, and desktops. You can also install it as a PWA (Progressive Web App) directly from your browser.",
+  },
+  {
+    question: "Which currencies does Expenso support?",
+    answer: "Expenso supports 35+ world currencies including USD, EUR, GBP, INR, JPY, AED, and many more. You can track your expenses in any currency you prefer.",
+  },
+  {
+    question: "Is my financial data secure on Expenso?",
+    answer: "Yes, your data is completely secure and private. Expenso uses industry-standard security practices to protect your financial information.",
+  },
+  {
+    question: "Can I export my expense data?",
+    answer: "Yes, Expenso allows you to export your transaction data as CSV reports, so you can use your data in spreadsheets or other tools anytime.",
+  },
+  {
+    question: "What is the best free budget manager app?",
+    answer: "Expenso is one of the best free budget manager apps available. It offers expense tracking, budget management, category-wise charts, CSV export, and multi-currency support — all for free.",
+  },
+];
+
 function WordReveal({ text }: { text: string }) {
   const words = text.split(" ");
   return (
@@ -128,9 +164,13 @@ export default function HomeClient() {
               Best free expense tracker
             </div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 pb-4">
+            {/* Hidden static H1 for Google to read (animated H1 may be missed by crawlers) */}
+            <h1 className="sr-only">Free Expense Tracker & Budget Manager - Expenso</h1>
+
+            {/* Visible animated H1 for users */}
+            <div aria-hidden="true" className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 pb-4">
               <WordReveal text="Free Expense Tracker & Budget Manager" />
-            </h1>
+            </div>
 
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
               Track your expenses, manage your money, and stay in control with Expenso.
@@ -255,14 +295,14 @@ export default function HomeClient() {
             </motion.div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
               {[
-                { src: "/home-images/dashboard.webp", title: "Dashboard", desc: "Overview & analytics", bg: "from-indigo-50 to-purple-50" },
-                { src: "/home-images/transactions.webp", title: "Transactions", desc: "Track income & expenses", bg: "from-emerald-50 to-teal-50" },
-                { src: "/home-images/categories.webp", title: "Categories", desc: "Organize spending", bg: "from-purple-50 to-pink-50" },
-                { src: "/home-images/profile.webp", title: "Profile", desc: "Personal settings", bg: "from-orange-50 to-amber-50" },
+                { src: "/home-images/dashboard.webp", title: "Dashboard", desc: "Overview & analytics", bg: "from-indigo-50 to-purple-50", alt: "Expenso dashboard showing expense overview, charts and financial analytics" },
+                { src: "/home-images/transactions.webp", title: "Transactions", desc: "Track income & expenses", bg: "from-emerald-50 to-teal-50", alt: "Expenso transactions page showing income and expense tracking list" },
+                { src: "/home-images/categories.webp", title: "Categories", desc: "Organize spending", bg: "from-purple-50 to-pink-50", alt: "Expenso categories page to organize and manage spending by category" },
+                { src: "/home-images/profile.webp", title: "Profile", desc: "Personal settings", bg: "from-orange-50 to-amber-50", alt: "Expenso profile and personal settings page for budget manager" },
               ].map((item, i) => (
                 <motion.div key={item.title} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.5 }} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100">
                   <div className={`relative overflow-hidden bg-linear-to-br ${item.bg}`} style={{ aspectRatio: "720/399" }}>
-                    <img src={item.src} alt={item.title} width={720} height={399} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" loading="lazy" decoding="async" />
+                    <img src={item.src} alt={item.alt} width={720} height={399} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" loading="lazy" decoding="async" />
                   </div>
                   <div className="p-5 text-center">
                     <h3 className="font-bold text-gray-900 text-lg mb-1">{item.title}</h3>
@@ -334,12 +374,31 @@ export default function HomeClient() {
           </div>
         </section>
 
+        {/* ── FAQ ── */}
+        <section id="faq" className="py-20 px-4 bg-white scroll-mt-20">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+              <p className="text-gray-500">Everything you need to know about Expenso</p>
+            </div>
+            <div className="space-y-4">
+              {faqs.map((faq, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="bg-gray-50 rounded-2xl p-6 border border-gray-100 hover:border-indigo-200 hover:shadow-md transition-all">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{faq.question}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{faq.answer}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Mobile bottom padding for nav */}
         <div className="md:hidden h-24" />
 
       </div>
 
       {/* Mobile Nav */}
+      <Footer />
       <HomeMobileNav />
 
     </div>

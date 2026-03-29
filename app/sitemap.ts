@@ -20,5 +20,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    {
+  url: "https://expenso-vault.vercel.app/privacy-policy",
+  lastModified: new Date(),
+  changeFrequency: "monthly",
+  priority: 0.3,
+},
+{
+  url: "https://expenso-vault.vercel.app/terms",
+  lastModified: new Date(),
+  changeFrequency: "monthly",
+  priority: 0.3,
+},
+{
+  url: "https://expenso-vault.vercel.app/cookie-policy",
+  lastModified: new Date(),
+  changeFrequency: "monthly",
+  priority: 0.3,
+},
   ];
 }
