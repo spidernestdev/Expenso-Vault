@@ -63,7 +63,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <a
-href="mailto:contactspidernestdev@gmail.com"
+href="mailto:"
   className="flex items-center gap-2 hover:text-indigo-400 transition-colors"
 >
   <Mail className="w-4 h-4 shrink-0" />
