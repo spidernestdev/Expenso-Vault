@@ -5,6 +5,7 @@ import Footer from "./components/layout/Footer";
 import ReviewSection from "./components/reviews/ReviewSection";
 import HomeHeader from "./components/layout/HomeHeader";
 import HomeMobileNav from "./components/layout/HomeMobileNav";
+import WelcomePopup from "./components/popup/WelcomePopup";
 import {
   ArrowRight, CheckCircle, TrendingUp, LayoutDashboard, PieChart,
   Download, PlusCircle, Eye, Smartphone, Wallet, BarChart3,
@@ -399,6 +400,7 @@ export default function HomeClient() {
 
       {/* Mobile Nav */}
       <Footer />
+      <WelcomePopup />
       <HomeMobileNav />
 
     </div>
